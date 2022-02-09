@@ -11,8 +11,7 @@ import calc
 import convert
 import translate
 import codecs
-
-
+import weather_forecast
 opts = {"alias": ("гдз", "решебник", "ответы"),
         "tbr": (
             'скажи', 'расскажи', 'покажи', 'сколько', 'произнеси', 'как', 'сколько', 'поставь', 'переведи', "засеки",
@@ -29,7 +28,7 @@ opts = {"alias": ("гдз", "решебник", "ответы"),
              "translator": ("переводчик", "translate", "переведи"),
              "deals": ("как оно", 'сам'),
              "showReminder": ("какие дела", "мои дела", "сегодня"),
-
+             "weather": ("погод", "прогноз"),
              "stopWork": ("пока", "связи", "стоп", 'свидания')}}
 startTime = 0
 speak_engine = pyttsx3.init()
@@ -72,7 +71,7 @@ def callback(recognizer, audio):
     except sr.UnknownValueError:
         print("Голос не распознан!")
     except sr.RequestError:
-        print("Неизвестная ошибка, проверьте интернет!")
+        print("Проверьте интернет соединение")
 
 
 def listen():
@@ -125,6 +124,9 @@ def execute_cmd(cmd):
         f1 = codecs.open("to_do_list.txt", encoding='windows-1251')
         s = f1.readlines()
         print(s)
+    elif cmd == "weather":
+        weather_forecast.forecast()
+
     elif cmd == 'deals':
         speak('У меня все превосходно! Надеюсь, у вас тоже')
     elif cmd == 'stopWork':
