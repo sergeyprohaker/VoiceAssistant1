@@ -4,7 +4,6 @@ import datetime
 
 now = datetime.datetime.now()
 
-
 if 6 <= now.hour < 12:
     funcs.speak("Доброе утро! Чем я могу вам помочь?")
 elif 12 <= now.hour < 18:

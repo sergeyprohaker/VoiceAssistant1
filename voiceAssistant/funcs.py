@@ -12,6 +12,13 @@ import convert
 import translate
 import codecs
 import weather_forecast
+
+roaming = os.getenv('APPDATA')
+path = os.path.dirname(roaming) + '\Local\VoiceAssistant'
+try:
+    os.mkdir(path)
+except OSError:
+    pass
 opts = {"alias": ("гдз", "решебник", "ответы"),
         "tbr": (
             'скажи', 'расскажи', 'покажи', 'сколько', 'произнеси', 'как', 'сколько', 'поставь', 'переведи', "засеки",
@@ -22,9 +29,9 @@ opts = {"alias": ("гдз", "решебник", "ответы"),
              'stopStopwatch': ('останови секундомер', "выключи секундомер", "прекрати"),
              "stupid1": ('расскажи анекдот', 'рассмеши меня', 'ты знаешь анекдоты', "шутка"),
              "calc": ('прибавить', 'умножить', 'разделить', 'степень', 'вычесть', 'поделить', 'х', '+', '-', '/'),
-             #"shutdown": ('выключи', 'выключить', 'отключение', 'отключи', 'выключи компьютер'),
+             # "shutdown": ('выключи', 'выключить', 'отключение', 'отключи', 'выключи компьютер'),
              "conv": ("валюта", "конвертер", "доллар", 'руб', 'евро'),
-             "internet": ("открой", "вк", "гугл", "сайт", 'вконтакте', "ютуб"),
+             "internet": ("открой", "вк", "загугли", "сайт", 'вконтакте', "найди"),
              "translator": ("переводчик", "translate", "переведи"),
              "deals": ("как оно", 'сам'),
              "showReminder": ("какие дела", "мои дела", "сегодня"),
@@ -52,10 +59,9 @@ def callback(recognizer, audio):
 
         print('Распознано: ' + voice)
 
-
         cmd = voice
 
-        f = open("to_do_list.txt", 'a')
+        f = open(path+'/to_do_list.txt', 'a')
         f.write(str(datetime.datetime.now()) + ' ' + voice + '\n')
         f.close()
         for x in opts['alias']:
@@ -121,12 +127,11 @@ def execute_cmd(cmd):
         else:
             speak("Секундомер не включен")
     elif cmd == "showReminder":
-        f1 = codecs.open("to_do_list.txt", encoding='windows-1251')
+        f1 = codecs.open(path+'/to_do_list.txt', encoding='windows-1251')
         s = f1.readlines()
         print(s)
     elif cmd == "weather":
         weather_forecast.forecast()
-
     elif cmd == 'deals':
         speak('У меня все превосходно! Надеюсь, у вас тоже')
     elif cmd == 'stopWork':

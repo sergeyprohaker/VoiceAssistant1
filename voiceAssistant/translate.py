@@ -1,14 +1,9 @@
-from googletrans import Translator
+import webbrowser
 import funcs
 
 
 def translate():
-    trans = Translator()
-    t = funcs.voice.split()[1:]
-    funcs.speak(t)
-    s = str(t)
-    s1 = s.replace('[', '')
-    s2 = s1.replace(']', '')
-    s3 = s2.replace("'", '')
-    result = trans.translate(s3, src='ru', dest='en')
-    funcs.speak(result.origin + 'по-английски будет' + result.text)
+    word = funcs.voice.split()[-1]
+    url = "https://translate.google.com/?hl=ru&tab=TT&sl=auto&tl=ru&text=" + word + "&op=translate"
+    webbrowser.get().open(url)
+
