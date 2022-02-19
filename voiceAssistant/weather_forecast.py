@@ -11,7 +11,7 @@ def forecast():
     elif funcs.voice.split()[-1] == 'барнауле':
         s_city = 'Barnaul'
     city_id = 0
-    appid = "5af2352e2de2352747d241a97280677e"
+    appid = "my_token"
     try:
         res = requests.get("http://api.openweathermap.org/data/2.5/find",
                      params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
