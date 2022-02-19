@@ -12,6 +12,7 @@ import convert
 import translate
 import codecs
 import weather_forecast
+import startapp
 
 roaming = os.getenv('APPDATA')
 path = os.path.dirname(roaming) + '\Local\VoiceAssistant'
@@ -103,9 +104,8 @@ def execute_cmd(cmd):
     if cmd == 'ctime':
         now = datetime.datetime.now()
         speak("Сейчас {0}:{1}".format(str(now.hour), str(now.minute)))
-    elif cmd == 'shutdown':
-        os.system('shutdown -s')
-        speak("Выключаю...")
+    elif cmd == 'startapp':
+        startapp.startapp()
     elif cmd == 'calc':
         calc.calculator()
     elif cmd == 'conv':
