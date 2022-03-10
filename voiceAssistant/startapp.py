@@ -6,7 +6,7 @@ def startapp():
     try:
         if funcs.voice.split()[-1] == 'блокнот':
             app_name = ' notepad'
-        elif funcs.voice.split()[-1] == 'рисования':
+        elif funcs.voice.split()[-1] == 'рисования' or funcs.voice.split()[-1] == 'paint':
             app_name = ' mspaint'
         elif funcs.voice.split()[-1] == 'задач':
             app_name = ' taskmgr'

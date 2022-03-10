@@ -1,4 +1,12 @@
 import funcs
+import os
+import datetime
+roaming = os.getenv('APPDATA')
+path = os.path.dirname(roaming) + '\Local\VoiceAssistant'
+try:
+    os.mkdir(path)
+except OSError:
+    pass
 def calculator():
     try:
         list_of_nums = funcs.voice.split()
@@ -24,5 +32,8 @@ def calculator():
         elif "степен" in oper:
             ans = num_1 ** num_2
         funcs.speak("{0} {1} {2} = {3}".format(list_of_nums[-3], list_of_nums[-2], list_of_nums[-1], ans))
+        f = open(path + '/to_do_list.txt', 'a')
+        f.write(str(datetime.datetime.now()) + ' ' + ans + '\n')
+        f.close()
     except:
         funcs.speak("Скажите, например: Сколько будет 2+2?")

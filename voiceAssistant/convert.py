@@ -1,5 +1,13 @@
 from currency_converter import CurrencyConverter
 import funcs
+import os
+import datetime
+roaming = os.getenv('APPDATA')
+path = os.path.dirname(roaming) + '\Local\VoiceAssistant'
+try:
+    os.mkdir(path)
+except OSError:
+    pass
 
 
 def convertation():
@@ -64,6 +72,9 @@ def convertation():
         try:
             funcs.speak(f"{money} {from_currency} в {to_currency} - "
                 f"{round(c.convert(money, from_currency, to_currency), 2)}")
+            f = open(path + '/to_do_list.txt', 'a')
+            f.write(str(datetime.datetime.now()) + ' ' + str(round(c.convert(money, from_currency, to_currency), 2)) + '\n')
+            f.close()
             break
         except ValueError:
             funcs.speak("Скажите, например: 50 долларов в рубли")

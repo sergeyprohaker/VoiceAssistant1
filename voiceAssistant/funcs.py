@@ -8,37 +8,40 @@ import time
 import anekdot
 import browser
 import calc
-import convert
+import convert_api
 import translate
 import codecs
 import weather_forecast
 import startapp
-
 roaming = os.getenv('APPDATA')
 path = os.path.dirname(roaming) + '\Local\VoiceAssistant'
 try:
     os.mkdir(path)
 except OSError:
     pass
-opts = {"alias": ("гдз", "решебник", "ответы"),
+opts = {
         "tbr": (
             'скажи', 'расскажи', 'покажи', 'сколько', 'произнеси', 'как', 'сколько', 'поставь', 'переведи', "засеки",
-            'запусти', 'сколько будет'),
+            'запусти', 'сколько будет', 'найти', 'найди', 'открой'),
         "cmds":
             {"ctime": ('текущее время', 'сейчас времени', 'который час', 'время'),
              'startStopwatch': ('запусти секундомер', "включи секундомер", "начини"),
              'stopStopwatch': ('останови секундомер', "выключи секундомер", "прекрати"),
-             "stupid1": ('расскажи анекдот', 'рассмеши меня', 'ты знаешь анекдоты', "шутка"),
+             "stupid1": ('расскажи анекдот', 'рассмеши меня', 'знаешь анекдоты', "шутка"),
              "calc": ('прибавить', 'умножить', 'разделить', 'степень', 'вычесть', 'поделить', 'х', '+', '-', '/'),
              "startapp": ('открой приложение', 'запусти приложение'),
-             "conv": ("валюта", "конвертер", "доллар", 'руб', 'евро'),
-             "internet": ("вк", "загугли", "сайт", 'вконтакте', "найди"),
+             "conv": ("конвертируй", "конвертер", "валют", "рубл", "евро", "доллар"),
+             "internet": ("загугли", "сайт", "информацию о", "посоветуй"),
              "translator": ("переводчик", "translate", "переведи"),
-             "deals": ("как оно", 'сам'),
-             "showReminder": ("какие дела", "мои дела", "сегодня"),
-             "weather": ("погод", "прогноз"),
-             "stopWork": ("пока", "связи", "стоп", 'свидания')}}
-startTime = 0
+             "deals": ("как оно", 'сам', 'дела'),
+             "who": ('кто', "что", "ты"),
+             "greet":("привет", "здравствуй"),
+             "showReminder": ("лог", "история", "запросов"),
+             "weather": ("погоды", "прогноз"),
+             "stopWork": ("пока", "связи", "стоп", 'свидания'),
+             "thanks": ("благодарю", "спасибо", "благодарен")}}
+
+start_time = 0
 speak_engine = pyttsx3.init()
 voices = speak_engine.getProperty('voices')
 speak_engine.setProperty('voice', voices[2].id)
@@ -46,12 +49,15 @@ r = sr.Recognizer()
 m = sr.Microphone(device_index=1)
 voice = "str"
 
-
 def speak(what):
+    """
+    Prints the given text and speaks it using the windows speech API
+    
+    :param what: The text to speak
+    """
     print(what)
     speak = wincl.Dispatch("SAPI.SpVoice")
     speak.Speak(what)
-
 
 def callback(recognizer, audio):
     try:
@@ -65,20 +71,18 @@ def callback(recognizer, audio):
         f = open(path+'/to_do_list.txt', 'a')
         f.write(str(datetime.datetime.now()) + ' ' + voice + '\n')
         f.close()
-        for x in opts['alias']:
-            cmd = cmd.replace(x, "").strip()
 
         for x in opts['tbr']:
             cmd = cmd.replace(x, "").strip()
         voice = cmd
-        # распознаем и выполняем команду
         cmd = recognize_cmd(cmd)
         execute_cmd(cmd['cmd'])
 
     except sr.UnknownValueError:
-        print("Голос не распознан!")
+        print("Голос не распознан или вы что-то некорректно произнесли! Попробуйте еще раз.")
     except sr.RequestError:
-        print("Проверьте интернет соединение")
+        speak("Кажется, у вас нет Интернета. Переключаю на оффлайн-распознавание...")
+        os.system(r"C:\Users\Sergey\Downloads\offline_recognition.py")
 
 
 def listen():
@@ -100,30 +104,39 @@ def recognize_cmd(cmd):
 
 
 def execute_cmd(cmd):
-    global startTime
+    global start_time
     if cmd == 'ctime':
         now = datetime.datetime.now()
         speak("Сейчас {0}:{1}".format(str(now.hour), str(now.minute)))
     elif cmd == 'startapp':
         startapp.startapp()
+        f = open(path + '/to_do_list.txt', 'a')
+        f.write(str(datetime.datetime.now()) + ' ' + 'Программа успешно запущена!' + '\n')
+        f.close()
     elif cmd == 'calc':
         calc.calculator()
     elif cmd == 'conv':
-        convert.convertation()
+        convert_api.convert()
     elif cmd == 'translator':
         translate.translate()
+        f = open(path + '/to_do_list.txt', 'a')
+        f.write(str(datetime.datetime.now()) + ' ' + 'Слово переведено успешно' + '\n')
+        f.close()
     elif cmd == 'stupid1':
         anekdot.fun()
     elif cmd == 'internet':
         browser.browser()
+        f = open(path + '/to_do_list.txt', 'a')
+        f.write(str(datetime.datetime.now()) + ' ' + 'Сайт открыт успешно' + '\n')
+        f.close()
     elif cmd == 'startStopwatch':
         speak("Секундомер запущен")
-        startTime = time.time()
+        start_time = time.time()
     elif cmd == "stopStopwatch":
-        if startTime != 0:
-            Time = time.time() - startTime
+        if start_time != 0:
+            Time = time.time() - start_time
             speak(f"Прошло {round(Time // 3600)} часов {round(Time // 60)} минут {round(Time % 60, 2)} секунд")
-            startTime = 0
+            start_time = 0
         else:
             speak("Секундомер не включен")
     elif cmd == "showReminder":
@@ -136,6 +149,12 @@ def execute_cmd(cmd):
         speak('У меня все превосходно! Надеюсь, у вас тоже')
     elif cmd == 'stopWork':
         speak("Приятно было пообщаться! До свидания.")
-        exit()
+        quit()
+    elif cmd == 'who':
+        speak('Я - ваш голосовой помощник. Готова ответить на ваши вопросы в любое время')
+    elif cmd == 'greet':
+        speak('И тебе привет')
+    elif cmd == 'thanks':
+        speak('Была рада помочь! Обращайтесь еще.')
     else:
         print("Команда не распознана")
