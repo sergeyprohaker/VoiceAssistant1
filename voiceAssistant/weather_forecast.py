@@ -15,7 +15,7 @@ def forecast():
         funcs.speak("Не удалось распознать город, пожалуйста, введите его вручную")
         s_city = input("Введите название города транслитом с заглавной буквы: ")
     city_id = 0
-    appid = "5af2352e2de2352747d241a97280677e"
+    appid = "my_token"
     try:
         res = requests.get("http://api.openweathermap.org/data/2.5/find",
                      params={'q': s_city, 'type': 'like', 'units': 'metric', 'APPID': appid})
