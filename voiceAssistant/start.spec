@@ -4,8 +4,8 @@
 block_cipher = None
 
 
-a = Analysis(['start.py', 'funcs.py', 'browser.py', 'calc.py', 'convert.py', 'anekdot.py'],
-             pathex=[],
+a = Analysis(['start.py'],
+             pathex=['anekdot.py', 'browser.py', 'calc.py', 'convert_api.py', 'funcs.py', 'startapp.py', 'translate.py', 'weather_forecast.py'],
              binaries=[],
              datas=[],
              hiddenimports=[],

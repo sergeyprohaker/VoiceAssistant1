@@ -32,7 +32,7 @@ def forecast():
         res = requests.get("http://api.openweathermap.org/data/2.5/weather",
                      params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
         data = res.json()
-        funcs.speak("Текущая погода")
+        funcs.speak("Текущая погода:")
         conditions = data['weather'][0]['description']
         funcs.speak(f"Условия: {conditions}")
         temp = data['main']['temp']
@@ -57,7 +57,7 @@ def forecast():
         res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
                            params={'id': city_id, 'units': 'metric', 'lang': 'ru', 'APPID': appid})
         data = res.json()
-        funcs.speak("Почасовой прогноз на 5 дней")
+        funcs.speak("Почасовой прогноз на 5 дней:")
         for i in data['list']:
             print(i['dt_txt'], '{0:+3.0f}'.format(i['main']['temp']), i['weather'][0]['description'])
     except Exception as e:
